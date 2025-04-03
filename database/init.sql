@@ -1,0 +1,40 @@
+-- Initialize recruitment database 
+ 
+CREATE TABLE IF NOT EXISTS users ( 
+    id SERIAL PRIMARY KEY, 
+    email VARCHAR(255) UNIQUE NOT NULL, 
+    name VARCHAR(255) NOT NULL, 
+    hashed_password VARCHAR(255) NOT NULL, 
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, 
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP 
+); 
+ 
+CREATE TABLE IF NOT EXISTS profiles ( 
+    id SERIAL PRIMARY KEY, 
+    user_id INTEGER REFERENCES users(id), 
+    profile_data JSONB NOT NULL, 
+    version INTEGER DEFAULT 1, 
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, 
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP 
+); 
+ 
+CREATE TABLE IF NOT EXISTS job_requirements ( 
+    id SERIAL PRIMARY KEY, 
+    company_id INTEGER NOT NULL, 
+    title VARCHAR(255) NOT NULL, 
+    requirement_data JSONB NOT NULL, 
+    status VARCHAR(50) DEFAULT 'active', 
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, 
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP 
+); 
+ 
+CREATE TABLE IF NOT EXISTS matches ( 
+    id SERIAL PRIMARY KEY, 
+    profile_id INTEGER REFERENCES profiles(id), 
+    job_id INTEGER REFERENCES job_requirements(id), 
+    match_score FLOAT NOT NULL, 
+    match_details JSONB, 
+    status VARCHAR(50) DEFAULT 'pending', 
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, 
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP 
+); 
