@@ -1,0 +1,26 @@
+version: '3' 
+services: 
+  backend: 
+    build: 
+      context: ./backend 
+    ports: 
+      - "8000:8000" 
+    volumes: 
+      - ./backend:/app 
+    environment: 
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/recruitment 
+    depends_on: 
+      - db 
+  db: 
+    image: postgres:14 
+    volumes: 
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql 
+      - postgres_data:/var/lib/postgresql/data 
+    environment: 
+      - POSTGRES_USER=postgres 
+      - POSTGRES_PASSWORD=postgres 
+      - POSTGRES_DB=recruitment 
+    ports: 
+      - "5432:5432" 
+volumes: 
+  postgres_data: 
